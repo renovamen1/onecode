@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+.dev.vars
+.wrangler/
+*.log
+.pm2/
+pids/
+*.pid
+*.seed
+*.backup
+*.bak

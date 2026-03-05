@@ -1,0 +1,156 @@
+:root {
+  --color-bg: #FFFDF0;
+  --color-card: #FFF8E7;
+  --color-primary: #FF6B6B;
+  --color-gold: #FFB830;
+  --color-text: #1A1A2E;
+  --color-info: #4ECDC4;
+  --color-success: #4CAF50;
+  --color-lavender: #B39DDB;
+  --color-rose: #F48FB1;
+  --round-1: #FF8A65;
+  --round-2: #42A5F5;
+  --round-3: #AB47BC;
+  --border-pixel: 3px solid #1A1A2E;
+  --border-thin: 2px solid #1A1A2E;
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-body: 'Nunito', sans-serif;
+  --font-code: 'Fira Code', monospace;
+  --shadow-pixel: 4px 4px 0px #1A1A2E;
+  --shadow-gold: 4px 4px 0px #FFB830;
+  --shadow-primary: 4px 4px 0px #FF6B6B;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Pixel-art rendering for sprites */
+.pixel-render {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-card); }
+::-webkit-scrollbar-thumb { background: var(--color-text); border: 2px solid var(--color-card); }
+
+/* Animations */
+@keyframes bounceSuccess {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes shakeFailure {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(6px); }
+  40% { transform: translateX(-6px); }
+  60% { transform: translateX(6px); }
+  80% { transform: translateX(-6px); }
+}
+
+@keyframes pixelFadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 107, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.8); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes timerShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+@keyframes sparkle {
+  0% { transform: scale(0) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.2) rotate(180deg); opacity: 0.8; }
+  100% { transform: scale(0) rotate(360deg); opacity: 0; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes waveOcean {
+  0% { background-position: 0 0; }
+  100% { background-position: 64px 0; }
+}
+
+@keyframes countdownPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes goldBurst {
+  0% { transform: scale(0); opacity: 1; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+@keyframes chestOpen {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(-120deg); }
+}
+
+.bounce { animation: bounceSuccess 300ms ease; }
+.shake { animation: shakeFailure 400ms ease; }
+.fade-in { animation: fadeIn 300ms ease; }
+.slide-up { animation: slideUp 300ms ease; }
+.float { animation: float 2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
