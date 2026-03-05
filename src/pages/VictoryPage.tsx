@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PixelButton } from '../components/ui/PixelButton';
-import { PixelCard } from '../components/ui/PixelCard';
 import { StarRating } from '../components/ui/StarRating';
 import { useGameStore } from '../store/gameStore';
 import { levels } from '../data/levels';
@@ -9,7 +8,7 @@ import { crew } from '../data/crew';
 
 export const VictoryPage: React.FC = () => {
   const navigate = useNavigate();
-  const { teamName, totalScore, xp, levelResults, crewUnlocked, resetGame } = useGameStore();
+  const { teamName, totalScore, levelResults, crewUnlocked, resetGame } = useGameStore();
   const completedLevels = Object.values(levelResults).filter(r => r.completed).length;
   const totalTime = Object.values(levelResults).reduce((sum, r) => sum + r.timeUsed, 0);
   const avgAccuracy = Object.values(levelResults).length > 0
@@ -27,57 +26,77 @@ export const VictoryPage: React.FC = () => {
   const shareText = `ONE CODE Results\nTeam: ${teamName}\nScore: ${totalScore.toLocaleString()}\nLevels: ${completedLevels}/15\nRank: ${rank}`;
 
   return (
-    <div style={{
+    <div className="scanlines" style={{
       minHeight: '100vh', padding: '40px 20px',
       display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '24px',
       background: 'var(--color-bg)', animation: 'pixelFadeIn 600ms ease',
       position: 'relative', overflow: 'hidden',
     }}>
-      {/* Gold particles */}
-      {Array.from({ length: 15 }).map((_, i) => (
+      {/* Gold sparkle particles */}
+      {Array.from({ length: 20 }).map((_, i) => (
         <div key={i} style={{
           position: 'absolute',
           left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
-          width: '4px', height: '4px', background: '#FFB830',
+          width: `${4 + Math.random() * 4}px`,
+          height: `${4 + Math.random() * 4}px`,
+          background: i % 3 === 0 ? '#FFB830' : i % 3 === 1 ? '#FF6B6B' : '#4ECDC4',
           animation: `sparkle ${1.5 + Math.random()}s ease ${Math.random() * 2}s infinite`,
+          imageRendering: 'pixelated',
         }} />
       ))}
 
+      {/* Title */}
       <div style={{
-        fontFamily: "'Press Start 2P'", fontSize: '24px', color: '#FFB830',
+        fontFamily: 'var(--font-pixel)', fontSize: 'clamp(18px, 5vw, 28px)',
+        color: '#FFB830',
         textShadow: '3px 3px 0px #1A1A2E',
+        animation: 'titleGlow 3s ease-in-out infinite',
       }}>
-        {completedLevels >= 15 ? 'VOYAGE COMPLETE' : 'VOYAGE ENDED'}
+        {completedLevels >= 15 ? '🏆 VOYAGE COMPLETE 🏆' : '⛵ VOYAGE ENDED'}
       </div>
 
-      <div style={{ fontFamily: "'Press Start 2P'", fontSize: '14px', color: '#FF6B6B' }}>
+      <div style={{
+        fontFamily: 'var(--font-pixel)', fontSize: '14px',
+        color: '#FF6B6B',
+      }}>
         {teamName}
       </div>
 
-      <PixelCard style={{ maxWidth: '500px', width: '100%', textAlign: 'center' }}>
+      {/* Main score card */}
+      <div className="iso-card" style={{
+        maxWidth: '500px', width: '100%', textAlign: 'center', padding: '24px',
+        background: 'var(--color-card)',
+      }}>
         <div style={{
-          fontFamily: "'Press Start 2P'", fontSize: '28px', color: '#FFB830',
-          marginBottom: '8px', animation: 'bounceSuccess 300ms ease',
+          fontFamily: 'var(--font-pixel)', fontSize: 'clamp(20px, 6vw, 32px)',
+          color: '#FFB830', marginBottom: '8px',
+          animation: 'bounceSuccess 300ms ease',
+          textShadow: '2px 2px 0px rgba(0,0,0,0.1)',
         }}>
           {totalScore.toLocaleString()} PTS
         </div>
         <div style={{
-          fontFamily: "'Press Start 2P'", fontSize: '12px',
+          fontFamily: 'var(--font-pixel)', fontSize: '12px',
           color: rank === 'KING OF THE GRAND LINE' ? '#FFB830' : '#1A1A2E',
           marginBottom: '16px',
+          padding: '4px 12px',
+          background: rank === 'KING OF THE GRAND LINE' ? 'rgba(255,184,48,0.1)' : 'transparent',
+          display: 'inline-block',
         }}>
-          \uD83C\uDFC6 {rank}
+          {'🏆'} {rank}
         </div>
         <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px',
-          fontFamily: "'Nunito'", fontSize: '13px',
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px',
+          fontFamily: 'var(--font-body)', fontSize: '13px',
+          padding: '12px', background: 'var(--color-bg)',
+          border: 'var(--border-thin)',
         }}>
-          <div>Levels: {completedLevels}/15</div>
-          <div>Time: {Math.floor(totalTime / 60)}m {totalTime % 60}s</div>
-          <div>Accuracy: {Math.round(avgAccuracy * 100)}%</div>
-          <div>Hints Used: {hintsUsed}</div>
+          <div>{'📊'} Levels: {completedLevels}/15</div>
+          <div>{'⏱'} Time: {Math.floor(totalTime / 60)}m {totalTime % 60}s</div>
+          <div>{'🎯'} Accuracy: {Math.round(avgAccuracy * 100)}%</div>
+          <div>{'💡'} Hints Used: {hintsUsed}</div>
         </div>
-      </PixelCard>
+      </div>
 
       {/* Level grid */}
       <div style={{
@@ -88,17 +107,21 @@ export const VictoryPage: React.FC = () => {
           const result = levelResults[l.id];
           return (
             <div key={l.id} style={{
-              textAlign: 'center', padding: '6px',
-              background: result?.completed ? '#E8F5E9' : '#F5F5F5',
+              textAlign: 'center', padding: '8px 4px',
+              background: result?.completed ? '#E8F5E9' : 'var(--color-card)',
               border: `2px solid ${result?.completed ? '#4CAF50' : '#ccc'}`,
+              boxShadow: result?.completed ? '2px 2px 0px rgba(76,175,80,0.3)' : '2px 2px 0px rgba(0,0,0,0.05)',
             }}>
-              <div style={{ fontFamily: "'Press Start 2P'", fontSize: '8px', marginBottom: '2px' }}>
+              <div style={{
+                fontFamily: 'var(--font-pixel)', fontSize: '8px', marginBottom: '4px',
+                color: result?.completed ? '#2E7D32' : '#999',
+              }}>
                 {l.id}
               </div>
               {result?.completed ? (
                 <StarRating rating={result.starRating} size="sm" animate={false} />
               ) : (
-                <span style={{ fontSize: '10px', color: '#ccc' }}>\u2610</span>
+                <span style={{ fontSize: '10px', color: '#ccc' }}>{'☐'}</span>
               )}
             </div>
           );
@@ -106,24 +129,29 @@ export const VictoryPage: React.FC = () => {
       </div>
 
       {/* Crew roster */}
-      <div style={{ display: 'flex', gap: '8px' }}>
+      <div style={{
+        display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'center',
+      }}>
         {crew.map(c => (
           <div key={c.id} style={{
-            width: '36px', height: '36px',
+            width: '40px', height: '40px',
             background: crewUnlocked[c.id] ? c.colorScheme : '#888',
-            border: '2px solid #1A1A2E',
+            border: '3px solid #1A1A2E',
+            boxShadow: '2px 2px 0px rgba(0,0,0,0.2)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontFamily: "'Press Start 2P'", fontSize: '10px', color: '#FFF',
+            fontFamily: 'var(--font-pixel)', fontSize: '11px', color: '#FFF',
             filter: crewUnlocked[c.id] ? 'none' : 'grayscale(1)',
+            imageRendering: 'pixelated',
           }}>
             {crewUnlocked[c.id] ? c.archetype[0] : '?'}
           </div>
         ))}
       </div>
 
+      {/* Actions */}
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
         <PixelButton variant="primary" onClick={() => navigate('/leaderboard')}>
-          \uD83C\uDFC6 LEADERBOARD
+          {'🏆'} LEADERBOARD
         </PixelButton>
         <PixelButton variant="secondary" onClick={() => {
           if (window.confirm('Start a new voyage? Current progress will be reset.')) {
@@ -131,13 +159,13 @@ export const VictoryPage: React.FC = () => {
             navigate('/register');
           }
         }}>
-          \u26F5 PLAY AGAIN
+          {'⛵'} PLAY AGAIN
         </PixelButton>
         <PixelButton variant="ghost" onClick={() => {
           navigator.clipboard.writeText(shareText);
           alert('Results copied to clipboard!');
         }}>
-          \uD83D\uDCCB SHARE
+          {'📋'} SHARE
         </PixelButton>
       </div>
     </div>

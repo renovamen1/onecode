@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface ToastMessage {
   id: number;
@@ -14,7 +14,11 @@ export function showToast(message: string, type: 'info' | 'warning' | 'success' 
   listeners.forEach(fn => fn(msg));
 }
 
-const icons = { info: '\u2139\uFE0F', warning: '\u26A0\uFE0F', success: '\u2705' };
+const typeStyles: Record<string, { icon: string; border: string; bg: string }> = {
+  info: { icon: 'ℹ️', border: '#4ECDC4', bg: '#F0FFFE' },
+  warning: { icon: '⚠️', border: '#FFB830', bg: '#FFFCF0' },
+  success: { icon: '✅', border: '#4CAF50', bg: '#F0FFF0' },
+};
 
 export const ToastContainer: React.FC = () => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -35,17 +39,25 @@ export const ToastContainer: React.FC = () => {
       position: 'fixed', bottom: '20px', left: '50%', transform: 'translateX(-50%)',
       zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center',
     }}>
-      {toasts.map(t => (
-        <div key={t.id} style={{
-          background: '#FFF8E7', border: '2px solid #1A1A2E', padding: '10px 20px',
-          fontFamily: "'Nunito', sans-serif", fontSize: '13px',
-          boxShadow: '4px 4px 0px #1A1A2E', animation: 'slideUp 300ms ease',
-          display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap',
-        }}>
-          <span>{icons[t.type]}</span>
-          <span>{t.message}</span>
-        </div>
-      ))}
+      {toasts.map(t => {
+        const ts = typeStyles[t.type];
+        return (
+          <div key={t.id} style={{
+            background: ts.bg,
+            border: `3px solid ${ts.border}`,
+            borderLeft: `6px solid ${ts.border}`,
+            padding: '10px 20px',
+            fontFamily: 'var(--font-body)', fontSize: '13px',
+            boxShadow: '4px 4px 0px rgba(26,26,46,0.15)',
+            animation: 'slideUp 300ms ease',
+            display: 'flex', alignItems: 'center', gap: '8px', whiteSpace: 'nowrap',
+            color: '#1A1A2E',
+          }}>
+            <span>{ts.icon}</span>
+            <span>{t.message}</span>
+          </div>
+        );
+      })}
     </div>
   );
 };

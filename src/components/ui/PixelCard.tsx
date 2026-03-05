@@ -21,8 +21,10 @@ export const PixelCard: React.FC<PixelCardProps> = ({ variant = 'primary', child
     borderRadius: 0,
     boxShadow: '4px 4px 0px #1A1A2E',
     padding: '16px',
-    transition: 'transform 80ms, box-shadow 80ms',
+    transition: 'transform 100ms, box-shadow 100ms',
     cursor: onClick ? 'pointer' : 'default',
+    position: 'relative' as const,
+    imageRendering: 'pixelated' as const,
     ...variantStyles[variant],
     ...style,
   };
@@ -31,7 +33,7 @@ export const PixelCard: React.FC<PixelCardProps> = ({ variant = 'primary', child
     <div
       className={className}
       style={base}
-      onClick={onClick}
+      onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}
       onMouseEnter={e => {
         if (onClick) {
           (e.currentTarget as HTMLElement).style.transform = 'translate(-2px, -2px)';

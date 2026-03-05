@@ -28,38 +28,73 @@ export const RegisterPage: React.FC = () => {
   };
 
   const inputStyle: React.CSSProperties = {
-    fontFamily: "'Nunito', sans-serif", fontSize: '14px', padding: '10px 14px',
-    border: '2px solid #1A1A2E', borderRadius: 0, background: '#FFF',
+    fontFamily: 'var(--font-body)', fontSize: '14px', padding: '10px 14px',
+    border: '3px solid #1A1A2E', borderRadius: 0, background: '#FFF',
     width: '100%', outline: 'none',
+    boxShadow: 'inset 2px 2px 0px rgba(0,0,0,0.05)',
+    transition: 'border-color 200ms',
   };
 
   return (
-    <div style={{
+    <div className="scanlines" style={{
       minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
       background: 'var(--color-bg)', padding: '20px', animation: 'pixelFadeIn 600ms ease',
+      position: 'relative', overflow: 'hidden',
     }}>
-      <PixelCard style={{ maxWidth: '460px', width: '100%' }}>
+      {/* Decorative pixel blocks in corners */}
+      <div style={{
+        position: 'absolute', top: '20px', left: '20px',
+        width: '16px', height: '16px', background: 'var(--color-primary)',
+        opacity: 0.15, border: '2px solid var(--color-primary)',
+      }} />
+      <div style={{
+        position: 'absolute', top: '20px', right: '20px',
+        width: '16px', height: '16px', background: 'var(--color-gold)',
+        opacity: 0.15, border: '2px solid var(--color-gold)',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '20px', left: '20px',
+        width: '16px', height: '16px', background: 'var(--color-info)',
+        opacity: 0.15, border: '2px solid var(--color-info)',
+      }} />
+      <div style={{
+        position: 'absolute', bottom: '20px', right: '20px',
+        width: '16px', height: '16px', background: 'var(--color-lavender)',
+        opacity: 0.15, border: '2px solid var(--color-lavender)',
+      }} />
+
+      <div className="iso-card" style={{ maxWidth: '460px', width: '100%', padding: '24px' }}>
         <h2 style={{
           fontFamily: 'var(--font-pixel)', fontSize: '14px', color: 'var(--color-primary)',
           marginBottom: '24px', textAlign: 'center',
         }}>
-          \u2693 CREW REGISTRATION
+          {'⚓'} CREW REGISTRATION
         </h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
-            <label style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', marginBottom: '6px', display: 'block' }}>
+            <label style={{
+              fontFamily: 'var(--font-pixel)', fontSize: '8px',
+              marginBottom: '6px', display: 'block', color: '#666',
+            }}>
               TEAM NAME
             </label>
             <input
-              value={teamName} onChange={e => { setTeamName(e.target.value); setError(''); }}
-              placeholder="Enter crew name..." maxLength={20}
+              value={teamName}
+              onChange={e => { setTeamName(e.target.value); setError(''); }}
+              placeholder="Enter crew name..."
+              maxLength={20}
               style={inputStyle}
+              onFocus={e => { e.currentTarget.style.borderColor = '#FF6B6B'; }}
+              onBlur={e => { e.currentTarget.style.borderColor = '#1A1A2E'; }}
             />
           </div>
 
           <div>
-            <label style={{ fontFamily: 'var(--font-pixel)', fontSize: '8px', marginBottom: '8px', display: 'block' }}>
+            <label style={{
+              fontFamily: 'var(--font-pixel)', fontSize: '8px',
+              marginBottom: '8px', display: 'block', color: '#666',
+            }}>
               MODE
             </label>
             <div style={{ display: 'flex', gap: '8px' }}>
@@ -69,9 +104,10 @@ export const RegisterPage: React.FC = () => {
                 style={{
                   flex: 1, textAlign: 'center', cursor: 'pointer', padding: '12px',
                   border: !isSolo ? '3px solid var(--color-primary)' : '3px solid #1A1A2E',
+                  boxShadow: !isSolo ? 'var(--shadow-primary)' : 'var(--shadow-pixel)',
                 }}
               >
-                <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px' }}>\uD83D\uDC65 TEAM</div>
+                <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px' }}>{'👥'} TEAM</div>
                 <div style={{ fontSize: '11px', marginTop: '4px', color: '#666' }}>2 players</div>
               </PixelCard>
               <PixelCard
@@ -80,9 +116,10 @@ export const RegisterPage: React.FC = () => {
                 style={{
                   flex: 1, textAlign: 'center', cursor: 'pointer', padding: '12px',
                   border: isSolo ? '3px solid var(--color-primary)' : '3px solid #1A1A2E',
+                  boxShadow: isSolo ? 'var(--shadow-primary)' : 'var(--shadow-pixel)',
                 }}
               >
-                <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px' }}>\uD83D\uDC64 SOLO</div>
+                <div style={{ fontFamily: 'var(--font-pixel)', fontSize: '9px' }}>{'👤'} SOLO</div>
                 <div style={{ fontSize: '11px', marginTop: '4px', color: '#666' }}>+20% time</div>
               </PixelCard>
             </div>
@@ -91,13 +128,19 @@ export const RegisterPage: React.FC = () => {
           {!isSolo && (
             <div style={{ display: 'flex', gap: '8px' }}>
               <div style={{ flex: 1 }}>
-                <label style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', marginBottom: '4px', display: 'block' }}>
+                <label style={{
+                  fontFamily: 'var(--font-pixel)', fontSize: '7px',
+                  marginBottom: '4px', display: 'block', color: '#666',
+                }}>
                   MEMBER 1
                 </label>
                 <input value={member1} onChange={e => setMember1(e.target.value)} placeholder="Name..." style={inputStyle} />
               </div>
               <div style={{ flex: 1 }}>
-                <label style={{ fontFamily: 'var(--font-pixel)', fontSize: '7px', marginBottom: '4px', display: 'block' }}>
+                <label style={{
+                  fontFamily: 'var(--font-pixel)', fontSize: '7px',
+                  marginBottom: '4px', display: 'block', color: '#666',
+                }}>
                   MEMBER 2
                 </label>
                 <input value={member2} onChange={e => setMember2(e.target.value)} placeholder="Name..." style={inputStyle} />
@@ -106,20 +149,24 @@ export const RegisterPage: React.FC = () => {
           )}
 
           {error && (
-            <div style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--color-primary)', textAlign: 'center' }}>
+            <div style={{
+              fontFamily: 'var(--font-pixel)', fontSize: '8px',
+              color: 'var(--color-primary)', textAlign: 'center',
+              padding: '8px', background: '#FFE0E0', border: '2px solid var(--color-primary)',
+            }}>
               {error}
             </div>
           )}
 
           <PixelButton variant="primary" size="lg" onClick={handleStart} style={{ width: '100%', marginTop: '8px' }}>
-            \u26F5 BEGIN VOYAGE
+            {'⛵'} BEGIN VOYAGE
           </PixelButton>
 
           <PixelButton variant="ghost" size="sm" onClick={() => navigate('/')} style={{ width: '100%' }}>
-            BACK
+            {'←'} BACK
           </PixelButton>
         </div>
-      </PixelCard>
+      </div>
     </div>
   );
 };

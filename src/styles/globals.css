@@ -1,4 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap');
+
 :root {
+  /* ── Codedex Color Palette ── */
   --color-bg: #FFFDF0;
   --color-card: #FFF8E7;
   --color-primary: #FF6B6B;
@@ -8,17 +11,35 @@
   --color-success: #4CAF50;
   --color-lavender: #B39DDB;
   --color-rose: #F48FB1;
+  --color-code-bg: #F5F5F5;
+  --color-code-hl: #FFE0E0;
+
+  /* ── Round Zone Colors ── */
   --round-1: #FF8A65;
   --round-2: #42A5F5;
   --round-3: #AB47BC;
+
+  /* ── Pixel Borders & Shadows ── */
   --border-pixel: 3px solid #1A1A2E;
   --border-thin: 2px solid #1A1A2E;
-  --font-pixel: 'Press Start 2P', monospace;
-  --font-body: 'Nunito', sans-serif;
-  --font-code: 'Fira Code', monospace;
+  --border-dashed: 2px dashed #1A1A2E;
   --shadow-pixel: 4px 4px 0px #1A1A2E;
   --shadow-gold: 4px 4px 0px #FFB830;
   --shadow-primary: 4px 4px 0px #FF6B6B;
+  --shadow-deep: 6px 6px 0px #1A1A2E;
+
+  /* ── Isometric Variables ── */
+  --iso-tile-w: 64px;
+  --iso-tile-h: 32px;
+  --iso-depth: 16px;
+  --iso-shadow: 8px 8px 0px rgba(26,26,46,0.4);
+  --iso-highlight: 2px solid var(--color-gold);
+  --iso-tilt: perspective(1000px) rotateX(2deg);
+
+  /* ── Typography ── */
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-body: 'Nunito', sans-serif;
+  --font-code: 'Fira Code', monospace;
 }
 
 *, *::before, *::after {
@@ -27,30 +48,113 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-body);
   color: var(--color-text);
   background: var(--color-bg);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
 #root {
   min-height: 100vh;
 }
 
-/* Pixel-art rendering for sprites */
+/* ── Pixel-art rendering ── */
 .pixel-render {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--color-card); }
-::-webkit-scrollbar-thumb { background: var(--color-text); border: 2px solid var(--color-card); }
+/* ── Minecraft-style Scanline Overlay ── */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.015) 2px,
+    rgba(0, 0, 0, 0.015) 4px
+  );
+}
 
-/* Animations */
+/* ── Isometric Frame Wrapper ── */
+.iso-frame {
+  transform: var(--iso-tilt);
+  transition: transform 300ms ease;
+}
+.iso-frame:hover {
+  transform: perspective(1000px) rotateX(0deg) translateY(-4px);
+}
+
+/* ── Isometric Card with 3D Depth ── */
+.iso-card {
+  position: relative;
+  background: var(--color-card);
+  border: var(--border-pixel);
+  box-shadow: var(--iso-shadow);
+  transition: transform 120ms, box-shadow 120ms;
+}
+.iso-card::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 4px;
+  right: -4px;
+  height: 8px;
+  background: rgba(26,26,46,0.15);
+  transform: skewX(-45deg);
+  transform-origin: top left;
+}
+.iso-card::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: -8px;
+  bottom: -4px;
+  width: 8px;
+  background: rgba(26,26,46,0.1);
+  transform: skewY(-45deg);
+  transform-origin: top left;
+}
+
+/* ── Minecraft Dirt/Grass Block Texture (CSS only) ── */
+.mc-block {
+  position: relative;
+  image-rendering: pixelated;
+}
+.mc-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-conic-gradient(rgba(0,0,0,0.03) 0% 25%, transparent 0% 50%) 
+    0 0 / 8px 8px;
+  pointer-events: none;
+}
+
+/* ── Scrollbar styling ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--color-card); border: 1px solid #eee; }
+::-webkit-scrollbar-thumb { 
+  background: var(--color-text); 
+  border: 2px solid var(--color-card); 
+}
+::-webkit-scrollbar-corner { background: var(--color-card); }
+
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════ */
+
 @keyframes bounceSuccess {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }
@@ -71,7 +175,7 @@ body {
 
 @keyframes float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50% { transform: translateY(-6px); }
 }
 
 @keyframes pulse {
@@ -81,7 +185,7 @@ body {
 
 @keyframes glow {
   0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 107, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.8); }
+  50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.8), 0 0 40px rgba(255, 107, 107, 0.3); }
 }
 
 @keyframes typewriter {
@@ -118,12 +222,17 @@ body {
 
 @keyframes bob {
   0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-4px); }
+  50% { transform: translateY(-6px); }
 }
 
 @keyframes waveOcean {
   0% { background-position: 0 0; }
   100% { background-position: 64px 0; }
+}
+
+@keyframes waveOceanSlow {
+  0% { background-position: 0 0; }
+  100% { background-position: 128px 0; }
 }
 
 @keyframes countdownPop {
@@ -142,15 +251,74 @@ body {
   100% { transform: rotateX(-120deg); }
 }
 
+/* NEW: Minecraft torch flicker */
+@keyframes torchFlicker {
+  0%, 100% { opacity: 1; filter: brightness(1); }
+  25% { opacity: 0.92; filter: brightness(1.05); }
+  50% { opacity: 0.97; filter: brightness(0.98); }
+  75% { opacity: 0.94; filter: brightness(1.02); }
+}
+
+/* NEW: Pixel rain / particle fall */
+@keyframes pixelFall {
+  0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+}
+
+/* NEW: Block place bounce (Minecraft style) */
+@keyframes blockPlace {
+  0% { transform: scale(0) rotateZ(-10deg); }
+  60% { transform: scale(1.1) rotateZ(2deg); }
+  100% { transform: scale(1) rotateZ(0deg); }
+}
+
+/* NEW: Isometric tile entrance */
+@keyframes isoSlideIn {
+  0% { transform: translate(-50%, -50%) scale(0) rotateX(60deg) rotateZ(-45deg); opacity: 0; }
+  70% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+/* NEW: XP fill pulse */
+@keyframes xpPulse {
+  0%, 100% { background: var(--color-gold); }
+  50% { background: #FFD54F; }
+}
+
+/* NEW: Title 3D text shadow cycle */
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 4px 4px 0px #1A1A2E, 0 0 10px rgba(255,107,107,0.3); }
+  50% { text-shadow: 4px 4px 0px #1A1A2E, 0 0 30px rgba(255,107,107,0.6), 0 0 60px rgba(255,184,48,0.2); }
+}
+
+/* NEW: Ship wake trail */
+@keyframes shipWake {
+  0% { width: 0; opacity: 0.6; }
+  100% { width: 60px; opacity: 0; }
+}
+
+/* NEW: Isometric hover lift */
+@keyframes isoLift {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50% { transform: translate(-50%, -50%) translateY(-8px); }
+}
+
 .bounce { animation: bounceSuccess 300ms ease; }
 .shake { animation: shakeFailure 400ms ease; }
 .fade-in { animation: fadeIn 300ms ease; }
 .slide-up { animation: slideUp 300ms ease; }
 .float { animation: float 2s ease-in-out infinite; }
+.block-place { animation: blockPlace 400ms cubic-bezier(0.34, 1.56, 0.64, 1); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── Selection Styling ── */
+::selection {
+  background: var(--color-primary);
+  color: white;
 }
