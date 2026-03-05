@@ -1,73 +1,107 @@
-# React + TypeScript + Vite
+# ONE CODE: The Voyage of Reasoning
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A competitive puzzle game testing computational thinking skills through 15 epic challenges across the Grand Line.
 
-Currently, two official plugins are available:
+## Project Overview
+- **Name**: ONE CODE: The Voyage of Reasoning
+- **Goal**: A browser-based competitive puzzle game for hackathons, coding events, and CS education
+- **Tech Stack**: React 18 + TypeScript + Vite + Zustand + Tailwind-style CSS
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+### 15 Unique Puzzle Levels Across 3 Rounds
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**Round 1: Assemble the Crew (Reasoning & Logic)**
+1. Storm the Keyboard - Typing speed challenge with falling letters
+2. Lost in the Fog - Maze navigation with fog of war
+3. The Cipher Crosswords - CS-themed crossword puzzles
+4. Shattered Compass - Sliding tile puzzle
+5. The Admiral's Gambit - Chess mate-in-2 puzzle
+6. The Liar's Island - Knight/Knave logic puzzles
+7. Signal in the Static - Binary to ASCII decoder
+8. The Ancient Gate (BOSS) - Einstein's riddle logic grid
 
-## Expanding the ESLint configuration
+**Round 2: Into the Grand Line (Algorithmic Thinking)**
+9. The Cipher Stone - Caesar cipher decoder
+10. The Density Chamber - Visual bubble sort
+11. The Infinite Kitchen - Queue/Stack simulation
+12. The Haunted Lighthouse (BOSS) - Recursion challenges (Fibonacci/Hanoi)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+**Round 3: The Final Keys (Code, Debug & Optimize)**
+13. The Corrupted System - Python debugging puzzle
+14. The Ice Wall - Algorithm optimization (O(n^2) to O(n))
+15. The One Code (FINAL BOSS) - Recursive function tracing
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Core Game Systems
+- Real-time scoring with time bonus and accuracy multiplier
+- XP progression bar
+- 8 collectible crew members (unlocked through Round 1)
+- 5-star rating system per level
+- Hint system (2 per round, halves score)
+- Solo mode (+20% time bonus)
+- Local leaderboard with persistence
+- Save/resume functionality
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### UI/UX
+- Pixel-art aesthetic with Press Start 2P font
+- Grand Line world map with animated islands and ship
+- Level transition countdowns
+- Victory animations with treasure chest opening
+- Combo counter for sequential correct answers
+- Toast notifications
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## URLs
+- **Local Dev**: http://localhost:3000
+- **Production**: Deploy to Cloudflare Pages or Vercel
+
+## Quick Start
+```bash
+npm install
+npm run build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project Structure
 ```
+src/
+  components/
+    levels/      - All 15 level components
+    ui/          - Reusable UI (PixelCard, PixelButton, Timer, etc.)
+  data/          - Level configs, crew data, map data, rounds
+  hooks/         - Custom hooks
+  pages/         - Route pages (Title, Register, Map, Level, Victory, Leaderboard)
+  store/         - Zustand game state store
+  styles/        - Global CSS with pixel-art design system
+  types/         - TypeScript type definitions
+```
+
+## Data Architecture
+- **State Management**: Zustand with localStorage persistence
+- **Game Store**: Tracks currentLevel, score, XP, crew, hints, level results
+- **Leaderboard**: Local leaderboard stored in Zustand persistent store
+- **Storage**: All data client-side via localStorage (no backend required)
+
+## Scoring Formula
+```
+score = basePoints * (0.5 + 0.5 * (timeRemaining / timeLimit)) * accuracy
+```
+
+## Star Rating
+- 5 stars: >= 95% score, no hints
+- 4 stars: >= 80% score
+- 3 stars: >= 60% score
+- 2 stars: >= 40% score
+- 1 star: < 40% score
+
+## Deployment
+- **Platform**: Vite static build (deployable to any static host)
+- **Build**: `npm run build` creates optimized `dist/` directory
+- **Status**: Active
+- **Bundle Size**: ~375KB (116KB gzipped)
+
+## Event Hosting
+This game is designed for competitive events:
+- Teams of 2 or solo play
+- Real-time leaderboard display
+- Save/resume for browser crashes
+- No backend required - runs entirely in the browser
