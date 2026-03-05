@@ -25,6 +25,17 @@ export const VictoryPage: React.FC = () => {
 
   const shareText = `ONE CODE Results\nTeam: ${teamName}\nScore: ${totalScore.toLocaleString()}\nLevels: ${completedLevels}/15\nRank: ${rank}`;
 
+  const sparkles = React.useMemo(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      left: (i * 37 + 13) % 100,
+      top: (i * 23 + 7) % 100,
+      size: 4 + (i % 4),
+      color: i % 3 === 0 ? '#FFB830' : i % 3 === 1 ? '#FF6B6B' : '#4ECDC4',
+      duration: 1.5 + (i % 3) * 0.5,
+      delay: (i % 5) * 0.4,
+    })),
+  []);
+
   return (
     <div className="scanlines" style={{
       minHeight: '100vh', padding: '40px 20px',
@@ -33,14 +44,14 @@ export const VictoryPage: React.FC = () => {
       position: 'relative', overflow: 'hidden',
     }}>
       {/* Gold sparkle particles */}
-      {Array.from({ length: 20 }).map((_, i) => (
+      {sparkles.map((s, i) => (
         <div key={i} style={{
           position: 'absolute',
-          left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
-          width: `${4 + Math.random() * 4}px`,
-          height: `${4 + Math.random() * 4}px`,
-          background: i % 3 === 0 ? '#FFB830' : i % 3 === 1 ? '#FF6B6B' : '#4ECDC4',
-          animation: `sparkle ${1.5 + Math.random()}s ease ${Math.random() * 2}s infinite`,
+          left: `${s.left}%`, top: `${s.top}%`,
+          width: `${s.size}px`,
+          height: `${s.size}px`,
+          background: s.color,
+          animation: `sparkle ${s.duration}s ease ${s.delay}s infinite`,
           imageRendering: 'pixelated',
         }} />
       ))}

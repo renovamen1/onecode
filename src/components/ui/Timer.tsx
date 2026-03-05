@@ -19,23 +19,23 @@ export const Timer: React.FC<TimerProps> = ({ totalSeconds, onTimeUp, isRunning,
   }, [totalSeconds]);
 
   useEffect(() => {
-    if (isRunning && !isPaused && remaining > 0) {
-      intervalRef.current = setInterval(() => {
-        setRemaining(prev => {
-          const next = prev - 1;
-          if (onTick) onTick(next);
-          if (next <= 0 && !timeUpCalled.current) {
-            timeUpCalled.current = true;
-            setTimeout(onTimeUp, 0);
-          }
-          return Math.max(next, 0);
-        });
-      }, 1000);
-    }
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [isRunning, isPaused, remaining > 0]);
+    if (!isRunning || isPaused) return;
+    if (remaining <= 0) return;
 
-  const getRemainingRef = useCallback(() => remaining, [remaining]);
+    intervalRef.current = setInterval(() => {
+      setRemaining(prev => {
+        const next = prev - 1;
+        if (onTick) onTick(next);
+        if (next <= 0 && !timeUpCalled.current) {
+          timeUpCalled.current = true;
+          setTimeout(onTimeUp, 0);
+        }
+        return Math.max(next, 0);
+      });
+    }, 1000);
+
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [isRunning, isPaused]);
 
   const mins = Math.floor(remaining / 60);
   const secs = remaining % 60;

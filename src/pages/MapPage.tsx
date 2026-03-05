@@ -14,6 +14,13 @@ export const MapPage: React.FC = () => {
   const navigate = useNavigate();
   const { currentLevel, levelResults, crewUnlocked, totalScore, teamName } = useGameStore();
   const [selectedIsland, setSelectedIsland] = useState<number | null>(null);
+
+  // guard against empty teamName (e.g. direct /map visit or cleared save)
+  useEffect(() => {
+    if (!teamName) {
+      navigate('/', { replace: true });
+    }
+  }, [teamName, navigate]);
   const [showCrew, setShowCrew] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +41,6 @@ export const MapPage: React.FC = () => {
   const getIslandState = (levelId: number) => {
     if (levelResults[levelId]?.completed) return 'complete';
     if (levelId === currentLevel) return 'active';
-    if (levelId < currentLevel || (levelResults[levelId - 1]?.completed)) return 'active';
     return 'locked';
   };
 

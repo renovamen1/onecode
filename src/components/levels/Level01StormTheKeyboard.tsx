@@ -49,7 +49,7 @@ export const Level01StormTheKeyboard: React.FC<Level01Props> = ({ onComplete, on
     setLetters(prev => [...prev, newLetter]);
   }, [wave]);
 
-  // Game loop
+  // Game loop – uses requestAnimationFrame for smooth animation rather than a fixed interval
   useEffect(() => {
     if (gameOver) return;
     const loop = () => {

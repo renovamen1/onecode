@@ -29,6 +29,7 @@ export const Level07SignalInTheStatic: React.FC<Level07Props> = ({ onComplete, o
   const [round, setRound] = useState(0);
   const [input, setInput] = useState('');
   const [correct, setCorrect] = useState(0);
+  const correctRef = useRef(0);
   const [showStatic, setShowStatic] = useState(true);
   const [feedback, setFeedback] = useState('');
   const startTime = useRef(Date.now());
@@ -44,7 +45,9 @@ export const Level07SignalInTheStatic: React.FC<Level07Props> = ({ onComplete, o
   const handleSubmit = () => {
     const isCorrect = input.toUpperCase().trim() === puzzle.answer.toUpperCase();
     if (isCorrect) {
-      setCorrect(c => c + 1);
+      // increment both ref and state so future closures have updated value
+      correctRef.current += 1;
+      setCorrect(correctRef.current);
       setFeedback('SIGNAL DECODED!');
       setTimeout(() => {
         if (round < puzzleRounds.length - 1) {
@@ -53,7 +56,7 @@ export const Level07SignalInTheStatic: React.FC<Level07Props> = ({ onComplete, o
           setFeedback('');
         } else {
           const timeUsed = Math.floor((Date.now() - startTime.current) / 1000);
-          const accuracy = (correct + 1) / puzzleRounds.length;
+          const accuracy = correctRef.current / puzzleRounds.length;
           onComplete(100, timeUsed, accuracy);
         }
       }, 1000);

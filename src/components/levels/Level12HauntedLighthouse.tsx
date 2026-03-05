@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PixelButton } from '../ui/PixelButton';
 import { PixelCard } from '../ui/PixelCard';
+import { showToast } from '../ui/Toast';
 
 interface Level12Props {
   onComplete: (score: number, timeUsed: number, accuracy: number) => void;
@@ -23,7 +24,11 @@ export const Level12HauntedLighthouse: React.FC<Level12Props> = ({ onComplete, o
     if (phase !== 'choice') return;
     const t = setInterval(() => {
       setChoiceTimer(prev => {
-        if (prev <= 1) { setPhase('fibonacci'); return 0; }
+        if (prev <= 1) {
+          setPhase('fibonacci');
+          showToast('Time ran out! Fibonacci selected automatically.', 'warning');
+          return 0;
+        }
         return prev - 1;
       });
     }, 1000);

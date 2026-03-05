@@ -4,16 +4,17 @@ import { PixelButton } from '../components/ui/PixelButton';
 import { useGameStore } from '../store/gameStore';
 
 // Pixel particle component
-const PixelParticle: React.FC<{ delay: number; x: number }> = ({ delay, x }) => (
+interface ParticleData { delay: number; x: number; size: number; color: string; duration: number; }
+const PixelParticle: React.FC<ParticleData> = ({ delay, x, size, color, duration }) => (
   <div style={{
     position: 'absolute',
     left: `${x}%`,
     top: '-10px',
-    width: `${4 + Math.random() * 4}px`,
-    height: `${4 + Math.random() * 4}px`,
-    background: ['#FFB830', '#FF6B6B', '#4ECDC4', '#B39DDB', '#4CAF50'][Math.floor(Math.random() * 5)],
+    width: `${size}px`,
+    height: `${size}px`,
+    background: color,
     opacity: 0.7,
-    animation: `pixelFall ${4 + Math.random() * 6}s linear ${delay}s infinite`,
+    animation: `pixelFall ${duration}s linear ${delay}s infinite`,
     imageRendering: 'pixelated' as const,
   }} />
 );
@@ -57,6 +58,16 @@ export const TitlePage: React.FC = () => {
 
   const titleChars = 'ONE CODE'.split('');
 
+  const particles = React.useMemo<ParticleData[]>(() =>
+    Array.from({ length: 20 }, (_, i) => ({
+      delay: i * 0.5,
+      x: (i * 37 + 13) % 100,
+      size: 4 + (i % 4),
+      color: ['#FFB830', '#FF6B6B', '#4ECDC4', '#B39DDB', '#4CAF50'][i % 5],
+      duration: 4 + (i % 6),
+    })),
+  []);
+
   return (
     <div className="scanlines" style={{
       minHeight: '100vh', display: 'flex', flexDirection: 'column',
@@ -65,8 +76,8 @@ export const TitlePage: React.FC = () => {
       position: 'relative', overflow: 'hidden',
     }}>
       {/* Pixel particle rain */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <PixelParticle key={i} delay={i * 0.5} x={Math.random() * 100} />
+      {particles.map((p, i) => (
+        <PixelParticle key={i} {...p} />
       ))}
 
       {/* Minecraft-style ground blocks at bottom */}

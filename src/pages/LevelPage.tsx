@@ -53,6 +53,18 @@ export const LevelPage: React.FC = () => {
   const levelConfig = levels.find(l => l.id === levelId);
   const round = rounds.find(r => r.id === levelConfig?.roundId);
 
+  // redirect early if the requested level doesn't exist
+  React.useEffect(() => {
+    if (!levelConfig || !round) {
+      navigate('/map', { replace: true });
+    }
+  }, [levelConfig, round, navigate]);
+
+  if (!levelConfig || !round) {
+    // rendering is skipped because we'll redirect shortly
+    return null;
+  }
+
   const { totalScore, xp, isSoloMode, hintsRemaining, completeLevel, calculateScore } = useGameStore();
 
   const [state, setState] = useState<LevelState>('transition');
@@ -105,7 +117,7 @@ export const LevelPage: React.FC = () => {
       finalScore >= levelConfig.basePoints * 0.40 ? 2 : 1
     );
 
-    completeLevel(levelId, finalScore, timeUsed, accuracy);
+    completeLevel(levelId, finalScore, timeUsed, accuracy, 0, starRating);
     setTimerRunning(false);
 
     // Check crew unlock
@@ -210,6 +222,16 @@ export const LevelPage: React.FC = () => {
 
   // ─── Complete Screen ───
   if (state === 'complete') {
+    const completeParticles = React.useMemo(() =>
+      Array.from({ length: 12 }, (_, i) => ({
+        left: (i * 31 + 11) % 100,
+        top: (i * 17 + 5) % 100,
+        size: 6,
+        duration: 1.5 + (i % 3) * 0.3,
+        delay: (i % 5) * 0.4,
+      })),
+    []);
+
     return (
       <div className="scanlines" style={{
         minHeight: '100vh', display: 'flex', flexDirection: 'column',
@@ -218,12 +240,12 @@ export const LevelPage: React.FC = () => {
         position: 'relative', overflow: 'hidden',
       }}>
         {/* Gold particles */}
-        {Array.from({ length: 12 }).map((_, i) => (
+        {completeParticles.map((p, i) => (
           <div key={i} style={{
             position: 'absolute',
-            left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`,
-            width: '6px', height: '6px', background: '#FFB830',
-            animation: `sparkle ${1.5 + Math.random()}s ease ${Math.random() * 2}s infinite`,
+            left: `${p.left}%`, top: `${p.top}%`,
+            width: `${p.size}px`, height: `${p.size}px`, background: '#FFB830',
+            animation: `sparkle ${p.duration}s ease ${p.delay}s infinite`,
           }} />
         ))}
 

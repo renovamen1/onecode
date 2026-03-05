@@ -2,7 +2,9 @@ export interface Island {
   id: number;
   name: string;
   position: { x: number; y: number };
-  state: 'locked' | 'active' | 'complete' | 'boss';
+  // `state` is computed at runtime in MapPage via the game store. The raw data
+  // now omits it to avoid confusion. If a default is desired for editors, use
+  // `defaultState` or simply ignore this field.
   zone: 'east-blue' | 'grand-line' | 'new-world';
   roundId: number;
   levelId: number;

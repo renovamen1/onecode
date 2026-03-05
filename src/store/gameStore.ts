@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { GameState, LevelResult } from '../types/game';
+import { crew } from '../data/crew';
+
 
 interface LeaderboardEntry {
   teamName: string;
@@ -15,7 +17,7 @@ interface GameStore extends GameState {
   leaderboard: LeaderboardEntry[];
 
   startGame: (teamName: string, isSolo: boolean) => void;
-  completeLevel: (levelId: number, score: number, timeUsed: number, accuracy: number, hintsUsed?: number) => void;
+  completeLevel: (levelId: number, score: number, timeUsed: number, accuracy: number, hintsUsed?: number, starRating?: number) => void;
   useHint: (levelId: number) => boolean;
   unlockCrew: (index: number) => void;
   setCurrentLevel: (level: number) => void;
@@ -59,10 +61,9 @@ export const useGameStore = create<GameStore>()(
         });
       },
 
-      completeLevel: (levelId: number, score: number, timeUsed: number, accuracy: number, hintsUsed = 0) => {
+      completeLevel: (levelId: number, score: number, timeUsed: number, accuracy: number, hintsUsed = 0, starRating = 1) => {
         const state = get();
-        const starRating = state.calculateStarRating(score, score / Math.max(accuracy, 0.01), hintsUsed > 0);
-
+        // starRating is provided by caller
         const result: LevelResult = {
           levelId,
           score,
@@ -75,8 +76,10 @@ export const useGameStore = create<GameStore>()(
         };
 
         const newCrewUnlocked = [...state.crewUnlocked];
-        if (levelId <= 7 && levelId >= 1) {
-          newCrewUnlocked[levelId] = true;
+        // Unlock crew member whose unlockedAtLevel matches the completed level
+        const crewIndex = crew.findIndex(c => c.unlockedAtLevel === levelId);
+        if (crewIndex !== -1) {
+          newCrewUnlocked[crewIndex] = true;
         }
 
         const nextLevel = Math.min(levelId + 1, 15);
